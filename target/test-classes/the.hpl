@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Group-Id: com.google.appengine
+Short-Name: google-appengine
+Long-Name: Google App Engine Plugin
+Url: https://wiki.jenkins-ci.org/display/JENKINS/TODO+Plugin
+Plugin-Version: 1.0
+Hudson-Version: 1.625.3
+Jenkins-Version: 1.625.3
+Plugin-Dependencies: google-oauth-plugin:0.4
+Plugin-Developers: 
+Support-Dynamic-Loading: true
+Libraries: F:\jenkins\Plugins\google-appengine\src\main\resources,F:\j
+ enkins\Plugins\google-appengine\target\classes,C:\Users\Prasad\.m2\re
+ pository\com\github\stephenc\findbugs\findbugs-annotations\1.3.9-1\fi
+ ndbugs-annotations-1.3.9-1.jar
+Resource-Path: F:\jenkins\Plugins\google-appengine\src\main\webapp
+

@@ -1,0 +1,18 @@
+Manifest-Version: 1.0
+Built-By: Prasad
+Created-By: Apache Maven
+Build-Jdk: 1.8.0_121
+Extension-Name: google-appengine
+Specification-Title: Deploys applications to Google App Engine
+Implementation-Title: google-appengine
+Implementation-Version: 1.0
+Group-Id: com.google.appengine
+Short-Name: google-appengine
+Long-Name: Google App Engine Plugin
+Url: https://wiki.jenkins-ci.org/display/JENKINS/TODO+Plugin
+Plugin-Version: 1.0
+Hudson-Version: 1.625.3
+Jenkins-Version: 1.625.3
+Plugin-Dependencies: google-oauth-plugin:0.4
+Plugin-Developers: 
+
