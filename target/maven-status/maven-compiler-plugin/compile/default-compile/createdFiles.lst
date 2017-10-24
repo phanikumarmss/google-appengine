@@ -1,7 +1,7 @@
+com\google\appengine\googleappengine\GoogleAppEngine.class
+com\google\appengine\googleappengine\GoogleAppEngine.stapler
 com\google\appengine\googleappengine\Scope.class
 com\google\appengine\googleappengine\GoogleAppEngine\DescriptorImpl\doCheckCommand.stapler
 com\google\appengine\googleappengine\GoogleAppEngine$DescriptorImpl.class
-com\google\appengine\googleappengine\GoogleAppEngine.class
-com\google\appengine\googleappengine\GoogleAppEngine.stapler
 com\google\appengine\googleappengine\GoogleAppEngine\DescriptorImpl\doCheckCredentialsId.stapler
 META-INF\annotations\hudson.Extension

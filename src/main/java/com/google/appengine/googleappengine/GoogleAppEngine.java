@@ -22,7 +22,6 @@ import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.QueryParameter;
 import javax.servlet.ServletException;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
@@ -30,6 +29,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.io.ByteArrayOutputStream;
 
 import com.cloudbees.plugins.credentials.CredentialsProvider;
 
@@ -59,13 +59,20 @@ public class GoogleAppEngine extends Builder implements SimpleBuildStep {
     private Launcher launcherl;
     private FilePath tempDir;
 	private final boolean stop;
+	private final boolean delete;
+	String desciption="";
+	String versionID="";
+	String currentVersionID="";
+	private String service;
     Map<String, String> data;
     // Fields in config.jelly must match the parameter commands in the "DataBoundConstructor"
     @DataBoundConstructor
-    public GoogleAppEngine(String command,String credentialsId, boolean stop) {
+    public GoogleAppEngine(String command,String credentialsId, boolean stop, String service, boolean delete) {
         this.command = command;
         this.credentialsId = credentialsId;
 		this.stop=stop;
+		this.service=service;
+		this.delete=delete;
     }
     /**
      * We'll use this from the {@code config.jelly}.
@@ -74,9 +81,17 @@ public class GoogleAppEngine extends Builder implements SimpleBuildStep {
 	{
         return command;
     }
-	public String getStop()
+	public boolean getStop()
 	{
         return stop;
+    }
+	public String getService()
+	{
+        return service;
+    }
+	public boolean getDelete()
+	{
+        return delete;
     }
 	public String getCredentialsId() {
         return credentialsId;
@@ -84,12 +99,11 @@ public class GoogleAppEngine extends Builder implements SimpleBuildStep {
     @Override
     public boolean perform(AbstractBuild build, Launcher launcher, BuildListener listener) throws IOException, InterruptedException 
 	{
-        // This is where you 'build' the project.
-        // Since this is a dummy, we just say 'hello world' and call that a build.
-
-        // This also shows how you can consult the global configuration of the builder
-    	listener1=listener;
-        listener.getLogger().println("credentialsId:"+credentialsId);
+        listener1=listener;
+        listener.getLogger().println("Following Operations will be performed");
+        listener.getLogger().println("Previous servers will be stopped "+stop);
+        listener.getLogger().println("Delete old version on successful deploy of new version "+delete);
+        listener.getLogger().println("Service that will be stopped or deleted "+service);
         FilePath workspace=build.getWorkspace();
     	final GoogleRobotPrivateKeyCredentials credential = CredentialsProvider.findCredentialById(credentialsId,GoogleRobotPrivateKeyCredentials.class,build,new Scope());
 		tempDir = workspace.createTempDir("gcloud", "config");
@@ -108,11 +122,50 @@ public class GoogleAppEngine extends Builder implements SimpleBuildStep {
         	tempDir.deleteRecursive();
         	return buildStatus;
         }
-        buildStatus=executeGCloudCLI(build,workspace.getRemote(), launcher, listener, tempDir);
+		if(stop)
+		{
+			buildStatus=getVersionID(build,workspace.getRemote(), launcher, listener, tempDir);
+			if (!buildStatus)
+			{
+				tempDir.deleteRecursive();
+				return buildStatus;
+			}
+		}
+		buildStatus=executeGCloudCLI(build,workspace.getRemote(), launcher, listener, tempDir);
 		if (!buildStatus)
 		{
 			tempDir.deleteRecursive();
 			return buildStatus;
+		}
+		buildStatus=getCurrentVersionID(build,workspace.getRemote(), launcher, listener, tempDir);
+		if (!buildStatus)
+		{
+			tempDir.deleteRecursive();
+			return buildStatus;
+		}
+		buildStatus=splitTraffic(build,workspace.getRemote(), launcher, listener, tempDir);
+		if (!buildStatus)
+		{
+			tempDir.deleteRecursive();
+			return buildStatus;
+		}
+		if(stop)
+		{
+			buildStatus=stopPrevious(build,workspace.getRemote(), launcher, listener, tempDir);
+			if (!buildStatus)
+			{
+				tempDir.deleteRecursive();
+				return buildStatus;
+			}
+		}
+		if(delete)
+		{
+			buildStatus=deletePrevious(build,workspace.getRemote(), launcher, listener, tempDir);
+			if (!buildStatus)
+			{
+				tempDir.deleteRecursive();
+				return buildStatus;
+			}
 		}
 		listener.getLogger().println("Google Cloud Operation completed Successfully"+buildStatus+"\t"+tempDir.getRemote());
         tempDir.deleteRecursive();
@@ -164,13 +217,63 @@ public class GoogleAppEngine extends Builder implements SimpleBuildStep {
 		}
 		return tmpKeyFile.getRemote();
 	}
-    // Overridden for better type safety.
-    // If your plugin doesn't really define any property on Descriptor,
-    // you don't have to do this.
     @Override
     public DescriptorImpl getDescriptor() {
         return (DescriptorImpl)super.getDescriptor();
     }
+	private boolean getVersionID(AbstractBuild build,String workspace, Launcher launcher, TaskListener listener, FilePath configDir) throws IOException, InterruptedException {
+    	int retCode=1;
+    	try
+		{
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			if(service.length()<1)
+				service="default";
+    		retCode= launcher.launch()
+					.pwd(workspace)
+					.cmdAsSingleString("gcloud app services describe "+service+" --format text")
+					.stdout(baos)
+	                .envs(data)
+	                .join();
+			String desciption=baos.toString();
+			baos.close();
+			versionID=desciption.substring(desciption.indexOf("split.allocations.")+18,desciption.lastIndexOf(':'));
+			listener.getLogger().println("Stopping Version "+versionID);
+			if (retCode!=0)
+				if(build.getLog().contains("GCLOUD: ERROR: (gcloud.app.deploy) The requested resource already exists"))
+					return true;
+			
+		}
+		catch(Exception e)
+		{
+			listener.getLogger().println("Exception raised"+e.getMessage()+"\n"+e.toString()+"\n"+e.getCause());
+			e.printStackTrace();
+		}
+		return retCode==0?true:false;
+	}
+	private boolean getCurrentVersionID(AbstractBuild build,String workspace, Launcher launcher, TaskListener listener, FilePath configDir) throws IOException, InterruptedException {
+    	int retCode=1;
+    	try
+		{
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			if(service.length()<1)
+				service="default";
+    		retCode= launcher.launch()
+					.pwd(workspace)
+					.cmdAsSingleString("gcloud app services describe "+service+" --format text")
+					.stdout(baos)
+	                .envs(data)
+	                .join();
+			String desciption=baos.toString();
+			baos.close();
+			currentVersionID=desciption.substring(desciption.indexOf("split.allocations.")+18,desciption.lastIndexOf(':'));
+		}
+		catch(Exception e)
+		{
+			listener.getLogger().println("Exception raised"+e.getMessage()+"\n"+e.toString()+"\n"+e.getCause());
+			e.printStackTrace();
+		}
+		return retCode==0?true:false;
+	}
     private boolean executeGCloudCLI(AbstractBuild build,String workspace, Launcher launcher, TaskListener listener, FilePath configDir) throws IOException, InterruptedException {
     	int retCode=1;
     	try
@@ -181,14 +284,87 @@ public class GoogleAppEngine extends Builder implements SimpleBuildStep {
 					.stdout(listener.getLogger())
 	                .envs(data)
 	                .join();
-			/**
-    		listener.getLogger().println("Value to retCode"+retCode);
-			FileWriter fw=new FileWriter(new File(workspace+"hai.txt"));
-			fw.write(build.getLog());
-			fw.close();*/
 			if (retCode!=0)
 				if(build.getLog().contains("GCLOUD: ERROR: (gcloud.app.deploy) The requested resource already exists"))
 					return true;
+			
+		}
+		catch(Exception e)
+		{
+			listener.getLogger().println("Exception raised"+e.getMessage()+"\n"+e.toString()+"\n"+e.getCause());
+			e.printStackTrace();
+		}
+		return retCode==0?true:false;
+	}
+	private boolean stopPrevious(AbstractBuild build,String workspace, Launcher launcher, TaskListener listener, FilePath configDir) throws IOException, InterruptedException 
+	{
+    	int retCode=1;
+		for(int i=0;i<3&&retCode==1;i++)
+		{
+			try
+			{
+				try 
+				{
+					Thread.sleep(30000);
+				} 
+				catch (InterruptedException e1) 
+				{
+					e1.printStackTrace();
+				}
+				String stopService="gcloud app versions stop --service "+service+" "+versionID+" --quiet";
+				listener.getLogger().println("Stopping previous service "+service+" with version "+versionID);
+				retCode= launcher.launch()
+						.pwd(workspace)
+						.cmdAsSingleString(stopService)
+						.stdout(listener.getLogger())
+						.envs(data)
+						.join();
+			}
+			catch(Exception e)
+			{
+				listener.getLogger().println("Exception raised"+e.getMessage()+"\n"+e.toString()+"\n"+e.getCause());
+				e.printStackTrace();
+			}
+		}
+		return retCode==0?true:false;
+	}
+	private boolean deletePrevious(AbstractBuild build,String workspace, Launcher launcher, TaskListener listener, FilePath configDir) throws IOException, InterruptedException 
+	{
+    	int retCode=1;
+    	try
+		{
+			String deleteService="gcloud app versions delete --service "+service+" "+versionID+" --quiet";
+			listener.getLogger().println("Deleting previous service "+service+" with version "+versionID);
+    		retCode= launcher.launch()
+					.pwd(workspace)
+					.cmdAsSingleString(deleteService)
+					.stdout(listener.getLogger())
+	                .envs(data)
+	                .join();
+			if (retCode!=0)
+				if(build.getLog().contains("GCLOUD: ERROR: (gcloud.app.deploy) The requested resource already exists"))
+					return true;
+		}
+		catch(Exception e)
+		{
+			listener.getLogger().println("Exception raised"+e.getMessage()+"\n"+e.toString()+"\n"+e.getCause());
+			e.printStackTrace();
+		}
+		return retCode==0?true:false;
+	}
+	private boolean splitTraffic(AbstractBuild build,String workspace, Launcher launcher, TaskListener listener, FilePath configDir) throws IOException, InterruptedException 
+	{
+    	int retCode=1;
+    	try
+		{
+			String deleteService="gcloud app services set-traffic "+service+" --splits "+currentVersionID+"=1 --quiet";
+			listener.getLogger().println("Serving all traffic to new version "+currentVersionID);
+    		retCode= launcher.launch()
+					.pwd(workspace)
+					.cmdAsSingleString(deleteService)
+					.stdout(listener.getLogger())
+	                .envs(data)
+	                .join();
 		}
 		catch(Exception e)
 		{
@@ -291,6 +467,5 @@ public class GoogleAppEngine extends Builder implements SimpleBuildStep {
 	public void perform(Run<?, ?> arg0, FilePath arg1, Launcher arg2, TaskListener arg3)
 			throws InterruptedException, IOException {
 		// TODO Auto-generated method stub
-		
 	}
 }

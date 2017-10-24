@@ -1,45 +1,45 @@
-Sep 08, 2017 11:23:32 PM org.eclipse.jetty.util.log.Log initialized
-INFO: Logging initialized @1017ms
+Oct 25, 2017 4:22:03 AM org.eclipse.jetty.util.log.Log initialized
+INFO: Logging initialized @914ms
 Exploding C:\Users\Prasad\.m2\repository\org\jenkins-ci\main\jenkins-war\1.625.3\jenkins-war-1.625.3-war-for-test.jar into F:\jenkins\Plugins\google-appengine\target\jenkins-for-test
-Sep 08, 2017 11:23:47 PM org.eclipse.jetty.server.handler.ContextHandler setContextPath
+Oct 25, 2017 4:22:14 AM org.eclipse.jetty.server.handler.ContextHandler setContextPath
 WARNING: Empty contextPath
-Sep 08, 2017 11:23:48 PM org.eclipse.jetty.server.Server doStart
+Oct 25, 2017 4:22:14 AM org.eclipse.jetty.server.Server doStart
 INFO: jetty-9.2.12.v20150709
-Sep 08, 2017 11:23:48 PM org.eclipse.jetty.webapp.StandardDescriptorProcessor visitServlet
+Oct 25, 2017 4:22:14 AM org.eclipse.jetty.webapp.StandardDescriptorProcessor visitServlet
 INFO: NO JSP Support for /, did not find org.eclipse.jetty.jsp.JettyJspServlet
-Sep 08, 2017 11:23:48 PM org.eclipse.jetty.server.handler.ContextHandler doStart
+Oct 25, 2017 4:22:14 AM org.eclipse.jetty.server.handler.ContextHandler doStart
 INFO: Started o.e.j.w.WebAppContext@4567e53d{/,file:/F:/jenkins/Plugins/google-appengine/target/jenkins-for-test/,AVAILABLE}{F:\jenkins\Plugins\google-appengine\target\jenkins-for-test}
-Sep 08, 2017 11:23:48 PM org.eclipse.jetty.server.AbstractConnector doStart
-INFO: Started ServerConnector@22bb5646{HTTP/1.1}{localhost:50172}
-Sep 08, 2017 11:23:48 PM org.eclipse.jetty.server.Server doStart
-INFO: Started @17815ms
-Sep 08, 2017 11:23:49 PM jenkins.InitReactorRunner$1 onAttained
+Oct 25, 2017 4:22:14 AM org.eclipse.jetty.server.AbstractConnector doStart
+INFO: Started ServerConnector@22bb5646{HTTP/1.1}{localhost:52686}
+Oct 25, 2017 4:22:14 AM org.eclipse.jetty.server.Server doStart
+INFO: Started @12485ms
+Oct 25, 2017 4:22:15 AM jenkins.InitReactorRunner$1 onAttained
 INFO: Started initialization
-Sep 08, 2017 11:24:25 PM jenkins.InitReactorRunner$1 onAttained
+Oct 25, 2017 4:22:50 AM jenkins.InitReactorRunner$1 onAttained
 INFO: Listed all plugins
-Sep 08, 2017 11:24:25 PM jenkins.InitReactorRunner$1 onAttained
+Oct 25, 2017 4:22:50 AM jenkins.InitReactorRunner$1 onAttained
 INFO: Prepared all plugins
-Sep 08, 2017 11:24:25 PM jenkins.InitReactorRunner$1 onAttained
+Oct 25, 2017 4:22:50 AM jenkins.InitReactorRunner$1 onAttained
 INFO: Started all plugins
-Sep 08, 2017 11:24:25 PM jenkins.InitReactorRunner$1 onAttained
+Oct 25, 2017 4:22:50 AM jenkins.InitReactorRunner$1 onAttained
 INFO: Augmented all extensions
-Sep 08, 2017 11:24:28 PM jenkins.InitReactorRunner$1 onAttained
+Oct 25, 2017 4:22:53 AM jenkins.InitReactorRunner$1 onAttained
 INFO: Loaded all jobs
-Sep 08, 2017 11:24:33 PM org.jenkinsci.main.modules.sshd.SSHD start
-INFO: Started SSHD at port 50205
-Sep 08, 2017 11:24:35 PM jenkins.InitReactorRunner$1 onAttained
+Oct 25, 2017 4:22:59 AM org.jenkinsci.main.modules.sshd.SSHD start
+INFO: Started SSHD at port 52733
+Oct 25, 2017 4:22:59 AM jenkins.InitReactorRunner$1 onAttained
 INFO: Completed initialization
-Sep 08, 2017 11:24:36 PM org.eclipse.jetty.server.Server doStart
+Oct 25, 2017 4:22:59 AM org.eclipse.jetty.server.Server doStart
 INFO: jetty-9.2.12.v20150709
-Sep 08, 2017 11:24:36 PM org.eclipse.jetty.server.handler.ContextHandler doStart
+Oct 25, 2017 4:22:59 AM org.eclipse.jetty.server.handler.ContextHandler doStart
 INFO: Started o.e.j.s.ServletContextHandler@b25b095{/,null,AVAILABLE}
-Sep 08, 2017 11:24:36 PM org.eclipse.jetty.server.AbstractConnector doStart
-INFO: Started ServerConnector@719d35e8{HTTP/1.1}{0.0.0.0:50208}
-Sep 08, 2017 11:24:36 PM org.eclipse.jetty.server.Server doStart
-INFO: Started @65102ms
-Sep 08, 2017 11:24:42 PM org.eclipse.jetty.server.AbstractConnector doStop
+Oct 25, 2017 4:22:59 AM org.eclipse.jetty.server.AbstractConnector doStart
+INFO: Started ServerConnector@719d35e8{HTTP/1.1}{0.0.0.0:52735}
+Oct 25, 2017 4:22:59 AM org.eclipse.jetty.server.Server doStart
+INFO: Started @56991ms
+Oct 25, 2017 4:23:02 AM org.eclipse.jetty.server.AbstractConnector doStop
 INFO: Stopped ServerConnector@22bb5646{HTTP/1.1}{localhost:0}
-Sep 08, 2017 11:24:42 PM org.eclipse.jetty.server.handler.ContextHandler doStop
+Oct 25, 2017 4:23:02 AM org.eclipse.jetty.server.handler.ContextHandler doStop
 INFO: Stopped o.e.j.w.WebAppContext@4567e53d{/,file:/F:/jenkins/Plugins/google-appengine/target/jenkins-for-test/,UNAVAILABLE}{F:\jenkins\Plugins\google-appengine\target\jenkins-for-test}
 WARN: The method class org.apache.commons.logging.impl.SLF4JLogFactory#release() was invoked.
 WARN: Please see http://www.slf4j.org/codes.html#release for an explanation.
