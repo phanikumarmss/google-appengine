@@ -30,6 +30,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.io.ByteArrayOutputStream;
+import org.kohsuke.stapler.DataBoundSetter;
 
 import com.cloudbees.plugins.credentials.CredentialsProvider;
 
@@ -64,6 +65,7 @@ public class GoogleAppEngine extends Builder implements SimpleBuildStep {
 	String versionID="";
 	String currentVersionID="";
 	private String service;
+	String gcloudpath=getDescriptor().getGcloudPath();
     Map<String, String> data;
     // Fields in config.jelly must match the parameter commands in the "DataBoundConstructor"
     @DataBoundConstructor
@@ -96,10 +98,12 @@ public class GoogleAppEngine extends Builder implements SimpleBuildStep {
 	public String getCredentialsId() {
         return credentialsId;
     }
+	
     @Override
     public boolean perform(AbstractBuild build, Launcher launcher, BuildListener listener) throws IOException, InterruptedException 
 	{
         listener1=listener;
+        listener.getLogger().println("Configured gcloudpath is "+getDescriptor().getGcloudPath());
         listener.getLogger().println("Following Operations will be performed");
         listener.getLogger().println("Previous servers will be stopped "+stop);
         listener.getLogger().println("Delete old version on successful deploy of new version "+delete);
@@ -390,7 +394,7 @@ public class GoogleAppEngine extends Builder implements SimpleBuildStep {
          * <p>
          * If you don't want fields to be persisted, use {@code transient}.
          */
-        private boolean useFrench;
+        private String gcloudpath;
 
         /**
          * In order to load the persisted global configuration, you have to 
@@ -440,7 +444,7 @@ public class GoogleAppEngine extends Builder implements SimpleBuildStep {
         public boolean configure(StaplerRequest req, JSONObject formData) throws FormException {
             // To persist global configuration information,
             // set that to properties and call save().
-            useFrench = formData.getBoolean("useFrench");
+            gcloudpath = formData.getString("gcloudpath");
             // ^Can also use req.bindJSON(this, formData);
             //  (easier when there are many fields; need set* methods for this, like setUseFrench)
             save();
@@ -453,10 +457,11 @@ public class GoogleAppEngine extends Builder implements SimpleBuildStep {
          * The method command is bit awkward because global.jelly calls this method to determine
          * the initial state of the checkbox by the naming convention.
          */
-        public boolean getUseFrench() {
-            return useFrench;
+		 
+        public String getGcloudPath() {
+            return gcloudpath;
         }
-
+	
 		@Override
 		public String getDisplayName() {
 			// TODO Auto-generated method stub

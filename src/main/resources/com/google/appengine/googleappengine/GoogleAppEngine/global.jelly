@@ -1,0 +1,9 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout"
+    xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:a="/lib/auth">
+	 <f:section title="${%Google Cloud}">
+		<f:entry title="${%Gcloud Installer Path}" field="gcloudpath">
+            <f:textbox name="gcloudpath"/>
+          </f:entry>
+	</f:section>
+</j:jelly>

@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<project>
+  <actions/>
+  <description></description>
+  <keepDependencies>false</keepDependencies>
+  <properties/>
+  <scm class="hudson.scm.NullSCM"/>
+  <canRoam>true</canRoam>
+  <disabled>false</disabled>
+  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+  <triggers/>
+  <concurrentBuild>false</concurrentBuild>
+  <builders>
+    <com.google.appengine.googleappengine.GoogleAppEngine plugin="google-appengine@1.0">
+      <command>sjsjsk</command>
+      <stop>true</stop>
+      <delete>true</delete>
+      <desciption></desciption>
+      <versionID></versionID>
+      <currentVersionID></currentVersionID>
+      <service>default</service>
+      <gcloudpath>welcome</gcloudpath>
+    </com.google.appengine.googleappengine.GoogleAppEngine>
+  </builders>
+  <publishers/>
+  <buildWrappers/>
+</project>

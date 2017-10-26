@@ -1,0 +1,23 @@
+Started by user [8mha:AAAAlh+LCAAAAAAAAP9b85aBtbiIQTGjNKU4P08vOT+vOD8nVc83PyU1x6OyILUoJzMv2y+/JJUBAhiZGBgqihhk0NSjKDWzXb3RdlLBUSYGJk8GtpzUvPSSDB8G5tKinBIGIZ+sxLJE/ZzEvHT94JKizLx0a6BxUmjGOUNodHsLgAzOEgYu/dLi1CL9vNKcHACFIKlWvwAAAA==[0manonymous
+Building in workspace F:\jenkins\Plugins\google-appengine\work\jobs\Sample\workspace
+Configured gcloudpath is welcome
+Following Operations will be performed
+Previous servers will be stopped true
+Delete old version on successful deploy of new version true
+Service that will be stopped or deleted default
+ERROR: Build step failed with exception
+[8mha:AAAAWB+LCAAAAAAAAP9b85aBtbiIQSmjNKU4P08vOT+vOD8nVc8DzHWtSE4tKMnMz/PLL0ldFVf2c+b/lb5MDAwVRQxSaBqcITRIIQMEMIIUFgAAckCEiWAAAAA=[0mjava.lang.NullPointerException
+	at com.cloudbees.plugins.credentials.CredentialsProvider.findCredentialById(CredentialsProvider.java:767)
+	at com.cloudbees.plugins.credentials.CredentialsProvider.findCredentialById(CredentialsProvider.java:746)
+	at com.google.appengine.googleappengine.GoogleAppEngine.perform(GoogleAppEngine.java:112)
+	at hudson.tasks.BuildStepMonitor$1.perform(BuildStepMonitor.java:20)
+	at hudson.model.AbstractBuild$AbstractBuildExecution.perform(AbstractBuild.java:785)
+	at hudson.model.Build$BuildExecution.build(Build.java:205)
+	at hudson.model.Build$BuildExecution.doRun(Build.java:162)
+	at hudson.model.AbstractBuild$AbstractBuildExecution.run(AbstractBuild.java:537)
+	at hudson.model.Run.execute(Run.java:1741)
+	at hudson.model.FreeStyleBuild.run(FreeStyleBuild.java:43)
+	at hudson.model.ResourceController.execute(ResourceController.java:98)
+	at hudson.model.Executor.run(Executor.java:408)
+Build step 'Google App Engine' marked build as failure
+Finished: FAILURE

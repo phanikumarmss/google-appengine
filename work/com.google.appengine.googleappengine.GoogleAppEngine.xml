@@ -1,0 +1,4 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<com.google.appengine.googleappengine.GoogleAppEngine_-DescriptorImpl plugin="google-appengine@1.0">
+  <gcloudpath>welcome</gcloudpath>
+</com.google.appengine.googleappengine.GoogleAppEngine_-DescriptorImpl>
